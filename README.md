@@ -8,8 +8,14 @@ Maya 2025에서 AdvancedSkeleton(AS) 캐릭터와 Mixamo 계열 애니메이션�
 2. Maya Script Editor의 **Python** 탭에서 아래 코드를 실행합니다.
 
 ```python
-exec(open(r"C:\path\to\maya-AS-mixamo-bridge\install.py", encoding="utf-8").read())
+import runpy
+runpy.run_path(
+    r"C:\path\to\maya-AS-mixamo-bridge\install.py",
+    run_name="__main__",
+)
 ```
+
+기존 `exec`/`open` 조합은 실행된 코드에 `__file__` 경로를 전달하지 않으므로 사용하지 마세요.
 
 현재 Maya 사용자 `scripts` 폴더에 패키지가 설치되고 **AS Mixamo** 선반 버튼이 추가됩니다. 직접 실행하려면 다음 코드를 사용합니다.
 

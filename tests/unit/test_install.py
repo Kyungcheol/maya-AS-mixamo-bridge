@@ -21,3 +21,10 @@ def test_installer_copies_package_without_requiring_maya(tmp_path):
     assert installed == tmp_path / "as_mixamo_bridge"
     assert (installed / "ui.py").is_file()
     assert (installed / "profiles" / "as_belato01_v1.json").is_file()
+
+
+def test_readme_uses_runpy_so_installer_receives_its_file_path():
+    readme = (Path(__file__).parents[2] / "README.md").read_text(encoding="utf-8")
+
+    assert "runpy.run_path" in readme
+    assert "exec(open(" not in readme
