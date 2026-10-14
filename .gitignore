@@ -1,0 +1,22 @@
+# Maya scenes and interchange files may contain production assets.
+*.ma
+*.mb
+*.fbx
+*.abc
+
+# Maya and Python generated data.
+__pycache__/
+*.py[cod]
+*.log
+autosave/
+mayaSwatches/
+
+# Local analysis, recovery, and deliverable staging.
+work/
+outputs/
+
+# Editor and OS metadata.
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
