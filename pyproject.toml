@@ -17,3 +17,7 @@ as_mixamo_bridge = ["profiles/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+filterwarnings = [
+    "error",
+    "ignore:invalid escape sequence.*:DeprecationWarning",
+]
