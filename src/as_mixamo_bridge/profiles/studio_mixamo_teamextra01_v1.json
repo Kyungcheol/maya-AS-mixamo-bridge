@@ -1,0 +1,99 @@
+{
+  "profile_id": "studio_mixamo_teamextra01_v1",
+  "version": 1,
+  "rig_kind": "studio_mixamo",
+  "signature_nodes": ["AnimData_Hips", "Bind_Hips", "LeftHand_Options", "LeftFoot_Options"],
+  "skeleton": {
+    "hips": "AnimData_Hips",
+    "spine": "AnimData_Spine",
+    "chest": "AnimData_Spine2",
+    "neck": "AnimData_Neck",
+    "head": "AnimData_Head",
+    "left_shoulder": "AnimData_LeftShoulder",
+    "left_upper_arm": "AnimData_LeftArm",
+    "left_lower_arm": "AnimData_LeftForeArm",
+    "left_hand": "AnimData_LeftHand",
+    "right_shoulder": "AnimData_RightShoulder",
+    "right_upper_arm": "AnimData_RightArm",
+    "right_lower_arm": "AnimData_RightForeArm",
+    "right_hand": "AnimData_RightHand",
+    "left_upper_leg": "AnimData_LeftUpLeg",
+    "left_lower_leg": "AnimData_LeftLeg",
+    "left_foot": "AnimData_LeftFoot",
+    "left_toe": "AnimData_LeftToeBase",
+    "right_upper_leg": "AnimData_RightUpLeg",
+    "right_lower_leg": "AnimData_RightLeg",
+    "right_foot": "AnimData_RightFoot",
+    "right_toe": "AnimData_RightToeBase"
+  },
+  "controls": {
+    "fk": {
+      "hips": "Hips_CTRL",
+      "spine": "Spine_CTRL",
+      "chest": "Chest_CTRL",
+      "head": "Head_CTRL",
+      "left_upper_arm": "LeftArm_FK",
+      "left_lower_arm": "LeftForeArm_FK",
+      "left_hand": "LeftHand_FK",
+      "right_upper_arm": "RightArm_FK",
+      "right_lower_arm": "RightForeArm_FK",
+      "right_hand": "RightHand_FK",
+      "left_upper_leg": "LeftUpLeg_FK",
+      "left_lower_leg": "LeftLeg_FK",
+      "left_foot": "LeftFoot_FK",
+      "right_upper_leg": "RightUpLeg_FK",
+      "right_lower_leg": "RightLeg_FK",
+      "right_foot": "RightFoot_FK"
+    },
+    "ik": {
+      "left_hand": "LeftHand_IK",
+      "right_hand": "RightHand_IK",
+      "left_foot": "LeftFoot_IK",
+      "right_foot": "RightFoot_IK"
+    },
+    "pole": {
+      "left_elbow": "LeftArm_PV",
+      "right_elbow": "RightArm_PV",
+      "left_knee": "LeftLeg_PV",
+      "right_knee": "RightLeg_PV"
+    },
+    "root": {"root": "Global_CTRL", "body": "Hips_CTRL"},
+    "finger": {
+      "left_thumb": "LeftHandThumb1_FK",
+      "left_index": "LeftHandIndex1_FK",
+      "right_thumb": "RightHandThumb1_FK",
+      "right_index": "RightHandIndex1_FK"
+    }
+  },
+  "switches": {
+    "arm_l": {"node": "LeftHand_Options", "attribute": "FK_IK", "fk_value": 0, "ik_value": 1},
+    "arm_r": {"node": "RightHand_Options", "attribute": "FK_IK", "fk_value": 0, "ik_value": 1},
+    "leg_l": {"node": "LeftFoot_Options", "attribute": "FK_IK", "fk_value": 0, "ik_value": 1},
+    "leg_r": {"node": "RightFoot_Options", "attribute": "FK_IK", "fk_value": 0, "ik_value": 1}
+  },
+  "spaces": {
+    "arm_l_body": {"node": "LeftHand_Options", "attribute": "FollowBody", "values": {"world": 0, "body": 1}},
+    "arm_l_global": {"node": "LeftHand_Options", "attribute": "ParentToGlobal", "values": {"local": 0, "global": 1}},
+    "arm_r_body": {"node": "RightHand_Options", "attribute": "FollowBody", "values": {"world": 0, "body": 1}},
+    "arm_r_global": {"node": "RightHand_Options", "attribute": "ParentToGlobal", "values": {"local": 0, "global": 1}},
+    "leg_l_foot": {"node": "LeftFoot_Options", "attribute": "FollowFoot", "values": {"world": 0, "foot": 1}},
+    "leg_r_foot": {"node": "RightFoot_Options", "attribute": "FollowFoot", "values": {"world": 0, "foot": 1}}
+  },
+  "excluded_roots": ["FaceRig", "FaceControls"],
+  "humanik_slots": {
+    "1": "hips", "2": "left_upper_leg", "3": "left_lower_leg", "4": "left_foot",
+    "5": "right_upper_leg", "6": "right_lower_leg", "7": "right_foot", "8": "spine",
+    "9": "left_upper_arm", "10": "left_lower_arm", "11": "left_hand",
+    "12": "right_upper_arm", "13": "right_lower_arm", "14": "right_hand", "15": "head",
+    "16": "left_toe", "17": "right_toe", "18": "left_shoulder", "19": "right_shoulder",
+    "20": "neck", "23": "chest"
+  },
+  "tolerances": {
+    "root_position_cm": 0.1,
+    "end_effector_position_cm": 0.1,
+    "root_orientation_deg": 0.1,
+    "end_effector_orientation_deg": 0.1,
+    "body_orientation_deg": 0.25,
+    "foot_drift_cm": 0.1
+  }
+}

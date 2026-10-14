@@ -1,0 +1,98 @@
+{
+  "profile_id": "as_belato01_v1",
+  "version": 1,
+  "rig_kind": "advanced_skeleton",
+  "signature_nodes": ["MotionSystem", "DeformationSystem", "RootX_M", "FKIKArm_L", "FKIKLeg_L"],
+  "skeleton": {
+    "hips": "Root_M",
+    "spine": "Spine1_M",
+    "chest": "Chest_M",
+    "neck": "Neck_M",
+    "head": "Head_M",
+    "left_shoulder": "Scapula_L",
+    "left_upper_arm": "Shoulder_L",
+    "left_lower_arm": "Elbow_L",
+    "left_hand": "Wrist_L",
+    "right_shoulder": "Scapula_R",
+    "right_upper_arm": "Shoulder_R",
+    "right_lower_arm": "Elbow_R",
+    "right_hand": "Wrist_R",
+    "left_upper_leg": "Hip_L",
+    "left_lower_leg": "Knee_L",
+    "left_foot": "Ankle_L",
+    "left_toe": "Toes_L",
+    "right_upper_leg": "Hip_R",
+    "right_lower_leg": "Knee_R",
+    "right_foot": "Ankle_R",
+    "right_toe": "Toes_R"
+  },
+  "controls": {
+    "fk": {
+      "hips": "FKRoot_M",
+      "spine": "FKSpine1_M",
+      "chest": "FKChest_M",
+      "neck": "FKNeck_M",
+      "head": "FKHead_M",
+      "left_upper_arm": "FKShoulder_L",
+      "left_lower_arm": "FKElbow_L",
+      "left_hand": "FKWrist_L",
+      "right_upper_arm": "FKShoulder_R",
+      "right_lower_arm": "FKElbow_R",
+      "right_hand": "FKWrist_R",
+      "left_upper_leg": "FKHip_L",
+      "left_lower_leg": "FKKnee_L",
+      "left_foot": "FKAnkle_L",
+      "right_upper_leg": "FKHip_R",
+      "right_lower_leg": "FKKnee_R",
+      "right_foot": "FKAnkle_R"
+    },
+    "ik": {
+      "left_hand": "IKArm_L",
+      "right_hand": "IKArm_R",
+      "left_foot": "IKLeg_L",
+      "right_foot": "IKLeg_R"
+    },
+    "pole": {
+      "left_elbow": "PoleArm_L",
+      "right_elbow": "PoleArm_R",
+      "left_knee": "PoleLeg_L",
+      "right_knee": "PoleLeg_R"
+    },
+    "root": {"root": "RootX_M", "body": "Main"},
+    "finger": {
+      "left_thumb": "FKThumbFinger1_L",
+      "left_index": "FKIndexFinger1_L",
+      "right_thumb": "FKThumbFinger1_R",
+      "right_index": "FKIndexFinger1_R"
+    }
+  },
+  "switches": {
+    "arm_l": {"node": "FKIKArm_L", "attribute": "FKIKBlend", "fk_value": 0, "ik_value": 10},
+    "arm_r": {"node": "FKIKArm_R", "attribute": "FKIKBlend", "fk_value": 0, "ik_value": 10},
+    "leg_l": {"node": "FKIKLeg_L", "attribute": "FKIKBlend", "fk_value": 0, "ik_value": 10},
+    "leg_r": {"node": "FKIKLeg_R", "attribute": "FKIKBlend", "fk_value": 0, "ik_value": 10}
+  },
+  "spaces": {
+    "arm_l_follow": {"node": "IKArm_L", "attribute": "follow", "values": {"world": 0, "body": 10}},
+    "arm_r_follow": {"node": "IKArm_R", "attribute": "follow", "values": {"world": 0, "body": 10}},
+    "leg_l_follow": {"node": "IKLeg_L", "attribute": "follow", "values": {"world": 0, "body": 10}},
+    "leg_r_follow": {"node": "IKLeg_R", "attribute": "follow", "values": {"world": 0, "body": 10}}
+  },
+  "excluded_roots": ["FaceGroup", "FaceMotionSystem", "FaceDeformationSystem"],
+  "humanik_slots": {
+    "1": "hips", "2": "left_upper_leg", "3": "left_lower_leg", "4": "left_foot",
+    "5": "right_upper_leg", "6": "right_lower_leg", "7": "right_foot", "8": "spine",
+    "9": "left_upper_arm", "10": "left_lower_arm", "11": "left_hand",
+    "12": "right_upper_arm", "13": "right_lower_arm", "14": "right_hand", "15": "head",
+    "16": "left_toe", "17": "right_toe", "18": "left_shoulder", "19": "right_shoulder",
+    "20": "neck", "23": "chest"
+  },
+  "tolerances": {
+    "root_position_cm": 0.1,
+    "end_effector_position_cm": 0.1,
+    "root_orientation_deg": 0.1,
+    "end_effector_orientation_deg": 0.1,
+    "body_orientation_deg": 0.25,
+    "foot_drift_cm": 0.1
+  }
+}
