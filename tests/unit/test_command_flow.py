@@ -27,6 +27,7 @@ class FakeServices:
         self.validation = ValidationReport()
         self.transactions = []
         self.apply_error = None
+        self.bake_error = None
 
     def detect(self, selected):
         self.calls.append(("detect", selected))
@@ -51,6 +52,8 @@ class FakeServices:
 
     def bake(self, session):
         self.calls.append(("bake", session.context.root))
+        if self.bake_error:
+            raise self.bake_error
         return BakeResult("ASMB_Output", self.validation)
 
 
@@ -143,6 +146,20 @@ def test_failed_source_application_restores_and_removes_session():
 
     with pytest.raises(RuntimeError, match="bad FBX"):
         controller.apply_mixamo_animation("bad.fbx", "mesh")
+
+    assert services.transactions[0].restored
+    assert not controller.sessions
+
+
+def test_bake_exception_restores_and_removes_session():
+    """Catches a Maya bake error leaving a live transaction and stale adapter."""
+    services = FakeServices()
+    services.bake_error = RuntimeError("bake failed")
+    controller = BridgeController(services)
+    controller.enter_work_mode("mesh")
+
+    with pytest.raises(RuntimeError, match="bake failed"):
+        controller.bake_to_as("mesh")
 
     assert services.transactions[0].restored
     assert not controller.sessions

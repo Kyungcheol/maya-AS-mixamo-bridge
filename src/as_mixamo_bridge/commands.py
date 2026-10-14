@@ -100,8 +100,12 @@ class BridgeController:
 
     def bake_to_as(self, selected: str) -> BakeResult:
         session = self.enter_work_mode(selected)
-        result = self.services.bake(session)
-        return result
+        try:
+            return self.services.bake(session)
+        except Exception:
+            session.transaction.restore()
+            self.sessions.pop(session.context.root, None)
+            raise
 
     def restore_pre_conversion(self, selected: str) -> RestoreReport:
         context = self.services.detect(selected)
