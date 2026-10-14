@@ -7,7 +7,13 @@ from typing import Any, Protocol
 
 from .adapter import AdapterRig, MayaAdapterScene, create_adapter
 from .detection import canonical_leaf_name, detect_character
-from .models import BridgeError, CharacterContext, RestoreReport, ValidationReport
+from .models import (
+    BridgeError,
+    CharacterContext,
+    RestoreReport,
+    TimingMode,
+    ValidationReport,
+)
 from .neutral import (
     NeutralMotion,
     calibration_matrix,
@@ -18,7 +24,7 @@ from .neutral import (
 from .profiles import load_profile
 from .scene import MayaSceneQuery
 from .semantic import solve_pole_vector
-from .timing import detect_key_range
+from .timing import detect_key_range, sample_frames
 from .transaction import BridgeTransaction, MayaTransactionScene
 from .validation import MayaValidationScene, validate_motion
 
@@ -122,6 +128,10 @@ class MayaBridgeServices:
     def __init__(self) -> None:
         self.profile = load_profile("as_belato01_v1")
         self.studio_profile = load_profile("studio_mixamo_teamextra01_v1")
+        self.timing_mode = TimingMode.PRESERVE_FRAME_NUMBERS
+        self.change_scene_fps_to_source = False
+        self.last_source_fps: float | None = None
+        self.last_source_time_unit: str | None = None
 
     def detect(self, selected: str) -> CharacterContext:
         if not selected:
@@ -170,6 +180,8 @@ class MayaBridgeServices:
                     mel.eval("FBXImportSetMayaFrameRate -v true")
                     mel.eval(f'FBXImport -f "{escaped}"')
                     imported = sorted(set(cmds.ls(long=True) or []).difference(before))
+                    self.last_source_time_unit = cmds.currentUnit(query=True, time=True)
+                    self.last_source_fps = self._scene_fps(self.last_source_time_unit)
                 finally:
                     mel.eval("FBXPopSettings")
                     cmds.namespace(set=old_namespace)
@@ -187,6 +199,8 @@ class MayaBridgeServices:
                     )
                     or []
                 )
+                self.last_source_time_unit = old_time_unit
+                self.last_source_fps = self._scene_fps(old_time_unit)
             for node in imported:
                 if cmds.objExists(node):
                     try:
@@ -211,10 +225,17 @@ class MayaBridgeServices:
             source_profile = self.studio_profile
             source = self._find_studio_context(cmds.ls(long=True) or [])
             source_kind = "studio"
+            self.last_source_time_unit = cmds.currentUnit(query=True, time=True)
+            self.last_source_fps = self._scene_fps(self.last_source_time_unit)
 
         try:
+            if self.change_scene_fps_to_source and self.last_source_time_unit:
+                cmds.currentUnit(
+                    time=self.last_source_time_unit, updateAnimation=False
+                )
             self._key_adapter_from_source(
-                session, source, source_profile, policy
+                session, source, source_profile, policy,
+                self.last_source_fps or self._scene_fps(cmds.currentUnit(query=True, time=True)),
             )
         finally:
             if imported:
@@ -268,17 +289,18 @@ class MayaBridgeServices:
         source: CharacterContext,
         source_profile: Any,
         policy: ControlPolicy | None,
+        source_fps: float,
     ) -> None:
         cmds = MayaSceneQuery().cmds
         frame_range = detect_key_range(MayaSceneQuery(), source)
-        frames = tuple(
-            float(frame)
-            for frame in range(int(frame_range.start), int(frame_range.end) + 1)
+        target_fps = self._scene_fps(cmds.currentUnit(query=True, time=True))
+        frames = sample_frames(
+            frame_range, self.timing_mode, source_fps, target_fps
         )
         if not frames:
             raise BridgeError("source animation has no integer frames")
-        cmds.playbackOptions(minTime=frame_range.start, maxTime=frame_range.end)
-        cmds.currentTime(frames[0], edit=True)
+        cmds.playbackOptions(minTime=frames[0], maxTime=frames[-1])
+        cmds.currentTime(frame_range.start, edit=True)
 
         keyed: dict[str, tuple[str, tuple[float, ...]]] = {}
         for group in ("fk", "ik"):
@@ -339,7 +361,13 @@ class MayaBridgeServices:
             if key in pole_specs
         }
         for frame in frames:
-            cmds.currentTime(frame, edit=True)
+            if self.timing_mode is TimingMode.PRESERVE_PLAYBACK_DURATION:
+                source_frame = frame_range.start + (
+                    (frame - frame_range.start) * source_fps / target_fps
+                )
+            else:
+                source_frame = frame
+            cmds.currentTime(source_frame, edit=True)
             for key, (source_joint, offset) in keyed.items():
                 adapter = session.adapter.controls[key]
                 matrix = multiply_matrices(
@@ -367,7 +395,7 @@ class MayaBridgeServices:
                     cmds, session.adapter.controls[key], tuple(matrix), frame
                 )
             self._key_adapter_semantics(
-                cmds, session, source, source_profile, policy, frame
+                cmds, session, source, source_profile, policy, source_frame, frame
             )
 
     @staticmethod
@@ -388,7 +416,8 @@ class MayaBridgeServices:
         source: CharacterContext,
         source_profile: Any,
         policy: ControlPolicy | None,
-        frame: float,
+        source_frame: float,
+        target_frame: float,
     ) -> None:
         for name, target_definition in self.profile.switches.items():
             option = session.adapter.controls[f"switch:{name}"]
@@ -405,7 +434,8 @@ class MayaBridgeServices:
                 source_node = source.nodes[f"switch:{name}"]
                 source_value = float(
                     cmds.getAttr(
-                        f"{source_node}.{source_definition.attribute}", time=frame
+                        f"{source_node}.{source_definition.attribute}",
+                        time=source_frame,
                     )
                 )
                 midpoint = (source_definition.fk_value + source_definition.ik_value) * 0.5
@@ -416,7 +446,7 @@ class MayaBridgeServices:
                 )
                 value = target_definition.ik_value if is_ik else target_definition.fk_value
             cmds.setKeyframe(
-                plug, time=frame, value=value,
+                plug, time=target_frame, value=value,
                 inTangentType="stepnext", outTangentType="step",
             )
 
@@ -428,7 +458,9 @@ class MayaBridgeServices:
                 continue
             source_node = source.nodes[f"space:{name}"]
             source_value = float(
-                cmds.getAttr(f"{source_node}.{source_definition.attribute}", time=frame)
+                cmds.getAttr(
+                    f"{source_node}.{source_definition.attribute}", time=source_frame
+                )
             )
             label = min(
                 source_definition.values,
@@ -440,7 +472,7 @@ class MayaBridgeServices:
             attribute = name.replace(":", "_")
             cmds.setKeyframe(
                 f"{option}.{attribute}",
-                time=frame,
+                time=target_frame,
                 value=target_definition.values[label],
                 inTangentType="stepnext", outTangentType="step",
             )

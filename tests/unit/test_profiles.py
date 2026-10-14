@@ -42,6 +42,20 @@ def test_studio_and_as_switch_ranges_represent_the_real_rigs():
     assert advanced.switches["arm_l"].ik_value == 10.0
 
 
+def test_studio_profile_uses_verified_teamextra_control_names():
+    """Catches guessed controller names that do not exist in TeamExtra01."""
+    studio = load_profile("studio_mixamo_teamextra01_v1")
+
+    assert studio.controls["root"]["root"] == "global_CTRL"
+    assert studio.controls["root"]["body"] == "Root_CTRL"
+    assert studio.controls["fk"]["hips"] == "Pelvis_CTRL"
+    assert studio.controls["fk"]["left_upper_arm"] == "LeftArm_FK_CTRL"
+    assert studio.controls["ik"]["left_hand"] == "LeftHand_IK_CTRL"
+    assert studio.controls["pole"]["left_elbow"] == "LeftForeArm_IK_CTRL"
+    assert studio.spaces["arm_l_follow"].node == "LeftHand_IK_CTRL"
+    assert studio.spaces["leg_l_foot"].node == "LeftLeg_IK_CTRL"
+
+
 def test_profile_rejects_duplicate_scene_nodes(valid_profile_dict):
     """Catches two semantic joints accidentally targeting one scene node."""
     valid_profile_dict["skeleton"]["head"] = valid_profile_dict["skeleton"]["hips"]

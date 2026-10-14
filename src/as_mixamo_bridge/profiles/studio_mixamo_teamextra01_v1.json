@@ -2,7 +2,7 @@
   "profile_id": "studio_mixamo_teamextra01_v1",
   "version": 1,
   "rig_kind": "studio_mixamo",
-  "signature_nodes": ["AnimData_Hips", "Bind_Hips", "LeftHand_Options", "LeftFoot_Options"],
+  "signature_nodes": ["AnimData_Hips", "Bind_Hips", "CTRL_GRP", "global_CTRL", "LeftHand_Options", "LeftFoot_Options"],
   "skeleton": {
     "hips": "AnimData_Hips",
     "spine": "AnimData_Spine",
@@ -28,41 +28,42 @@
   },
   "controls": {
     "fk": {
-      "hips": "Hips_CTRL",
+      "hips": "Pelvis_CTRL",
       "spine": "Spine_CTRL",
-      "chest": "Chest_CTRL",
+      "chest": "Spine2_CTRL",
+      "neck": "Neck_CTRL",
       "head": "Head_CTRL",
-      "left_upper_arm": "LeftArm_FK",
-      "left_lower_arm": "LeftForeArm_FK",
-      "left_hand": "LeftHand_FK",
-      "right_upper_arm": "RightArm_FK",
-      "right_lower_arm": "RightForeArm_FK",
-      "right_hand": "RightHand_FK",
-      "left_upper_leg": "LeftUpLeg_FK",
-      "left_lower_leg": "LeftLeg_FK",
-      "left_foot": "LeftFoot_FK",
-      "right_upper_leg": "RightUpLeg_FK",
-      "right_lower_leg": "RightLeg_FK",
-      "right_foot": "RightFoot_FK"
+      "left_upper_arm": "LeftArm_FK_CTRL",
+      "left_lower_arm": "LeftForeArm_FK_CTRL",
+      "left_hand": "LeftHand_FK_CTRL",
+      "right_upper_arm": "RightArm_FK_CTRL",
+      "right_lower_arm": "RightForeArm_FK_CTRL",
+      "right_hand": "RightHand_FK_CTRL",
+      "left_upper_leg": "LeftUpLeg_FK_CTRL",
+      "left_lower_leg": "LeftLeg_FK_CTRL",
+      "left_foot": "LeftFoot_FK_CTRL",
+      "right_upper_leg": "RightUpLeg_FK_CTRL",
+      "right_lower_leg": "RightLeg_FK_CTRL",
+      "right_foot": "RightFoot_FK_CTRL"
     },
     "ik": {
-      "left_hand": "LeftHand_IK",
-      "right_hand": "RightHand_IK",
-      "left_foot": "LeftFoot_IK",
-      "right_foot": "RightFoot_IK"
+      "left_hand": "LeftHand_IK_CTRL",
+      "right_hand": "RightHand_IK_CTRL",
+      "left_foot": "LeftFoot_IK_CTRL",
+      "right_foot": "RightFoot_IK_CTRL"
     },
     "pole": {
-      "left_elbow": "LeftArm_PV",
-      "right_elbow": "RightArm_PV",
-      "left_knee": "LeftLeg_PV",
-      "right_knee": "RightLeg_PV"
+      "left_elbow": "LeftForeArm_IK_CTRL",
+      "right_elbow": "RightForeArm_IK_CTRL",
+      "left_knee": "LeftLeg_IK_CTRL",
+      "right_knee": "RightLeg_IK_CTRL"
     },
-    "root": {"root": "Global_CTRL", "body": "Hips_CTRL"},
+    "root": {"root": "global_CTRL", "body": "Root_CTRL"},
     "finger": {
-      "left_thumb": "LeftHandThumb1_FK",
-      "left_index": "LeftHandIndex1_FK",
-      "right_thumb": "RightHandThumb1_FK",
-      "right_index": "RightHandIndex1_FK"
+      "left_thumb": "LeftHandThumb1_CTRL",
+      "left_index": "LeftHandIndex1_CTRL",
+      "right_thumb": "RightHandThumb1_CTRL",
+      "right_index": "RightHandIndex1_CTRL"
     }
   },
   "switches": {
@@ -72,12 +73,12 @@
     "leg_r": {"node": "RightFoot_Options", "attribute": "FK_IK", "fk_value": 0, "ik_value": 1}
   },
   "spaces": {
-    "arm_l_follow": {"node": "LeftHand_Options", "attribute": "FollowBody", "values": {"world": 0, "body": 1}},
-    "arm_l_global": {"node": "LeftHand_Options", "attribute": "ParentToGlobal", "values": {"local": 0, "global": 1}},
-    "arm_r_follow": {"node": "RightHand_Options", "attribute": "FollowBody", "values": {"world": 0, "body": 1}},
-    "arm_r_global": {"node": "RightHand_Options", "attribute": "ParentToGlobal", "values": {"local": 0, "global": 1}},
-    "leg_l_foot": {"node": "LeftFoot_Options", "attribute": "FollowFoot", "values": {"world": 0, "foot": 1}},
-    "leg_r_foot": {"node": "RightFoot_Options", "attribute": "FollowFoot", "values": {"world": 0, "foot": 1}}
+    "arm_l_follow": {"node": "LeftHand_IK_CTRL", "attribute": "FollowBody", "values": {"world": 0, "body": 1}},
+    "arm_l_global": {"node": "LeftHand_IK_CTRL", "attribute": "ParentToGlobal", "values": {"local": 0, "global": 1}},
+    "arm_r_follow": {"node": "RightHand_IK_CTRL", "attribute": "FollowBody", "values": {"world": 0, "body": 1}},
+    "arm_r_global": {"node": "RightHand_IK_CTRL", "attribute": "ParentToGlobal", "values": {"local": 0, "global": 1}},
+    "leg_l_foot": {"node": "LeftLeg_IK_CTRL", "attribute": "FollowFoot", "values": {"world": 0, "foot": 1}},
+    "leg_r_foot": {"node": "RightLeg_IK_CTRL", "attribute": "FollowFoot", "values": {"world": 0, "foot": 1}}
   },
   "excluded_roots": ["FaceRig", "FaceControls"],
   "humanik_slots": {
