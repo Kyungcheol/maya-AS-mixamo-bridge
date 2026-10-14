@@ -71,6 +71,7 @@ def test_work_mode_bakes_exact_as_result_to_recoverable_layer():
     selected = next(node for node in cmds.ls(long=True) if _leaf(node) == "RootX_M")
     controller = BridgeController(MayaBridgeServices())
     session = controller.enter_work_mode(selected)
+    assert controller.enter_work_mode(session.adapter.root) is session
     adapter_root = session.adapter.controls["control:root:root"]
     initial = cmds.xform(adapter_root, query=True, worldSpace=True, translation=True)
     for frame, offset in ((1001, 0.0), (1002, 3.0)):

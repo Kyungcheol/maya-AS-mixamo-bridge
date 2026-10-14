@@ -68,7 +68,37 @@ class BridgeController:
         self.services = services
         self.sessions: dict[str, SessionResult] = {}
 
+    @staticmethod
+    def _is_adapter_selection(session: SessionResult, selected: str) -> bool:
+        selected_parts = tuple(part for part in selected.split("|") if part)
+        if not selected_parts:
+            return False
+        candidates = (
+            getattr(session.adapter, "root", ""),
+            *getattr(session.adapter, "owned_nodes", ()),
+        )
+        for candidate in candidates:
+            candidate_parts = tuple(part for part in candidate.split("|") if part)
+            if not candidate_parts or len(candidate_parts) > len(selected_parts):
+                continue
+            width = len(candidate_parts)
+            if any(
+                selected_parts[index:index + width] == candidate_parts
+                for index in range(len(selected_parts) - width + 1)
+            ):
+                return True
+        return False
+
+    def _session_from_adapter(self, selected: str) -> SessionResult | None:
+        for session in self.sessions.values():
+            if self._is_adapter_selection(session, selected):
+                return session
+        return None
+
     def enter_work_mode(self, selected: str) -> SessionResult:
+        adapter_session = self._session_from_adapter(selected)
+        if adapter_session is not None:
+            return adapter_session
         context = self.services.detect(selected)
         existing = self.sessions.get(context.root)
         if existing is not None:
@@ -108,10 +138,13 @@ class BridgeController:
             raise
 
     def restore_pre_conversion(self, selected: str) -> RestoreReport:
-        context = self.services.detect(selected)
-        session = self.sessions.pop(context.root, None)
+        session = self._session_from_adapter(selected)
+        if session is None:
+            context = self.services.detect(selected)
+            session = self.sessions.get(context.root)
         if session is None:
             raise BridgeError("no active bridge session exists for the selected character")
+        self.sessions.pop(session.context.root, None)
         return session.transaction.restore()
 
 

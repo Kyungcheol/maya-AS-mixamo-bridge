@@ -20,6 +20,11 @@ class FakeTransaction:
         return RestoreReport(True)
 
 
+class FakeAdapter:
+    root = "|ASMB_Adapter"
+    owned_nodes = ("|ASMB_Adapter", "|ASMB_Adapter|Root_CTRL")
+
+
 class FakeServices:
     def __init__(self):
         self.calls = []
@@ -31,6 +36,8 @@ class FakeServices:
 
     def detect(self, selected):
         self.calls.append(("detect", selected))
+        if selected.startswith("|ASMB_Adapter"):
+            raise RuntimeError("adapter is not an AS hierarchy")
         return CharacterContext("|Character", "as_belato01_v1")
 
     def begin(self, context):
@@ -42,7 +49,7 @@ class FakeServices:
         self.calls.append(("adapter", context.root))
         if self.cancel:
             raise UserCancelled("cancelled")
-        return {"root": "ASMB_Adapter"}
+        return FakeAdapter()
 
     def apply_animation(self, session, source_path, policy):
         self.calls.append(("apply", source_path, policy))
@@ -65,6 +72,33 @@ def test_enter_work_mode_creates_one_active_session():
     second = controller.enter_work_mode("|Character|mesh")
     assert first is second
     assert services.calls.count(("adapter", "|Character")) == 1
+
+
+def test_adapter_selection_reuses_existing_character_session():
+    """Catches temporary controls being mistaken for a second AS character."""
+    services = FakeServices()
+    controller = BridgeController(services)
+    session = controller.enter_work_mode("|Character|mesh")
+
+    result = controller.apply_mixamo_animation(
+        "walk.fbx", "|ASMB_Adapter|Root_CTRL"
+    )
+
+    assert result is session
+    assert [call for call in services.calls if call[0] == "detect"] == [
+        ("detect", "|Character|mesh")
+    ]
+
+
+def test_restore_accepts_adapter_control_selection():
+    services = FakeServices()
+    controller = BridgeController(services)
+    controller.enter_work_mode("|Character|mesh")
+
+    report = controller.restore_pre_conversion("|ASMB_Adapter|Root_CTRL")
+
+    assert report.restored
+    assert not controller.sessions
 
 
 def test_cancel_restores_transaction_and_leaves_no_session():
