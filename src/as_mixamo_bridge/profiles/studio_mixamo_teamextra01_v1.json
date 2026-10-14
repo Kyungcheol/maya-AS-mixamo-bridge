@@ -72,9 +72,9 @@
     "leg_r": {"node": "RightFoot_Options", "attribute": "FK_IK", "fk_value": 0, "ik_value": 1}
   },
   "spaces": {
-    "arm_l_body": {"node": "LeftHand_Options", "attribute": "FollowBody", "values": {"world": 0, "body": 1}},
+    "arm_l_follow": {"node": "LeftHand_Options", "attribute": "FollowBody", "values": {"world": 0, "body": 1}},
     "arm_l_global": {"node": "LeftHand_Options", "attribute": "ParentToGlobal", "values": {"local": 0, "global": 1}},
-    "arm_r_body": {"node": "RightHand_Options", "attribute": "FollowBody", "values": {"world": 0, "body": 1}},
+    "arm_r_follow": {"node": "RightHand_Options", "attribute": "FollowBody", "values": {"world": 0, "body": 1}},
     "arm_r_global": {"node": "RightHand_Options", "attribute": "ParentToGlobal", "values": {"local": 0, "global": 1}},
     "leg_l_foot": {"node": "LeftFoot_Options", "attribute": "FollowFoot", "values": {"world": 0, "foot": 1}},
     "leg_r_foot": {"node": "RightFoot_Options", "attribute": "FollowFoot", "values": {"world": 0, "foot": 1}}

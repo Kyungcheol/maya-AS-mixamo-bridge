@@ -101,8 +101,8 @@ class CharacterContext:
 class SwitchEvent:
     frame: float
     channel: str
-    previous_value: float
-    value: float
+    previous_value: float | str
+    value: float | str
     world_matrices: Mapping[str, tuple[float, ...]] = field(default_factory=dict)
 
     def __post_init__(self) -> None:

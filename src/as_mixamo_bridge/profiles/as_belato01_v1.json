@@ -74,9 +74,13 @@
   },
   "spaces": {
     "arm_l_follow": {"node": "IKArm_L", "attribute": "follow", "values": {"world": 0, "body": 10}},
+    "arm_l_global": {"node": "PoleArm_L", "attribute": "follow", "values": {"local": 10, "global": 0}},
     "arm_r_follow": {"node": "IKArm_R", "attribute": "follow", "values": {"world": 0, "body": 10}},
+    "arm_r_global": {"node": "PoleArm_R", "attribute": "follow", "values": {"local": 10, "global": 0}},
     "leg_l_follow": {"node": "IKLeg_L", "attribute": "follow", "values": {"world": 0, "body": 10}},
-    "leg_r_follow": {"node": "IKLeg_R", "attribute": "follow", "values": {"world": 0, "body": 10}}
+    "leg_l_foot": {"node": "PoleLeg_L", "attribute": "follow", "values": {"world": 0, "foot": 10}},
+    "leg_r_follow": {"node": "IKLeg_R", "attribute": "follow", "values": {"world": 0, "body": 10}},
+    "leg_r_foot": {"node": "PoleLeg_R", "attribute": "follow", "values": {"world": 0, "foot": 10}}
   },
   "excluded_roots": ["FaceGroup", "FaceMotionSystem", "FaceDeformationSystem"],
   "humanik_slots": {
