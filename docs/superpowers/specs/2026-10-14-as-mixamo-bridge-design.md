@@ -1,5 +1,7 @@
 # AS–Mixamo Bridge: Maya One-Click Retargeting Design
 
+> **Superseded:** This HumanIK/proxy-adapter design was rejected after Maya testing. The approved redesign is `docs/superpowers/specs/2026-10-15-isolated-teamextra-as-bridge-design.md`. This file remains as a failure record only.
+
 Date: 2026-10-14
 
 Primary host: Autodesk Maya 2025

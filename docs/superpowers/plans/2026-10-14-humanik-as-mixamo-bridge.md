@@ -1,5 +1,7 @@
 # HumanIK AS–Mixamo Bridge Implementation Plan
 
+> **Superseded:** Do not execute this plan. It implements the rejected HumanIK/proxy-adapter architecture. The replacement design is `docs/superpowers/specs/2026-10-15-isolated-teamextra-as-bridge-design.md` and requires a new implementation plan after written-spec approval.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build a one-click Maya bridge that transfers validated body animation between the supplied studio Mixamo control rig and AdvancedSkeleton while preserving recoverability, frame numbers, FK/IK transitions, and supported space switches.
